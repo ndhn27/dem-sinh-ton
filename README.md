@@ -1,10 +1,14 @@
 # 🌙 Đêm Sinh Tồn
 
+[![CI](https://github.com/ndhn27/dem-sinh-ton/actions/workflows/ci.yml/badge.svg)](https://github.com/ndhn27/dem-sinh-ton/actions/workflows/ci.yml)
+
 Game sinh tồn 2D theo kiểu "auto-battler" lấy cảm hứng từ dòng game Vampire Survivors, làm bằng **Godot 4.7**. Nhân vật tự động tấn công, quái xuất hiện ngày càng đông và mạnh theo thời gian — lên cấp để chọn vũ khí/chỉ số mới, xây build và cố sống sót hết thời gian bản đồ.
 
 ## Chơi thử
 
-Bản build web nằm sẵn ở [`index.html`](index.html) — mở trực tiếp bằng trình duyệt là chơi được ngay, không cần cài gì. Hỗ trợ cả bàn phím/chuột (PC) lẫn cảm ứng (di động).
+Mở trực tiếp [`index.html`](index.html) bằng trình duyệt là chơi được ngay, không cần cài gì. Hỗ trợ cả bàn phím/chuột (PC) lẫn cảm ứng (di động).
+
+> **Lưu ý:** `index.html` **không phải** bản export web của Godot project bên dưới — đây là một bản triển khai JS/Canvas 2D viết tay riêng, mô phỏng lại cùng thiết kế gameplay (cùng vũ khí, chỉ số, trang bị, quái) để chơi thử nhanh trên trình duyệt mà không cần build Godot. Hai bản được đồng bộ thủ công; nếu sửa gameplay ở bản này, nhớ áp dụng tương tự ở bản kia (`godot-project/scripts/`) nếu muốn cả hai khớp nhau.
 
 ## Cách chơi
 
@@ -55,9 +59,27 @@ Zombie (cơ bản), Dơi (nhanh, bay lượn thất thường), Brute (máu trâ
 
 ## Công nghệ
 
-- **Godot Engine 4.7**, renderer GL Compatibility
+- **Godot Engine 4.7**, renderer GL Compatibility (`godot-project/`)
 - Toàn bộ thế giới/quái/hiệu ứng vẽ trực tiếp bằng code (`_draw()`), state quản lý bằng Dictionary/Array thuần thay vì scene node riêng cho từng đối tượng — tối ưu cho số lượng quái lớn (tối đa 220 quái cùng lúc)
-- Export ra web (`index.html`), chạy thẳng trên trình duyệt
+- `index.html`: bản mirror độc lập bằng vanilla JS + Canvas 2D (xem lưu ý ở mục "Chơi thử" phía trên) — không phụ thuộc Godot runtime, chạy thẳng trên trình duyệt
+
+## Testing / CI
+
+`index.html` có một bộ smoke test headless (`tests/smoke.test.mjs`, dùng `node:test` + jsdom) chạy tự động trên mỗi push/PR qua GitHub Actions (`.github/workflows/ci.yml`). Bộ test này **không** kiểm tra rendering (không có canvas thật trong CI), mà kiểm tra:
+
+- game khởi động không throw lỗi (bắt được lỗi cú pháp, tham chiếu null id, v.v.)
+- `startGame()` khởi tạo player đúng (máu đầy, vũ khí ban đầu, mảng state rỗng)
+- mô phỏng ~60 giây gameplay liên tục (nhiều tick `update()`) không crash
+- lên cấp (`gainXp`), giết quái (`damageEnemy`), và game-over (health về 0) chuyển state đúng
+
+Chạy local:
+
+```bash
+npm ci
+npm test
+```
+
+Chưa có test cho `godot-project/` (GDScript) hay test tương tác bàn phím/cảm ứng — vẫn cần playtest tay cho phần đó.
 
 ## Cấu trúc thư mục
 

@@ -1124,6 +1124,21 @@ el.dashBtn.addEventListener('click', tryDash);
 
 resize();
 requestAnimationFrame(loop);
+
+// Test hooks: read-only access for automated smoke tests (tests/smoke.test.mjs).
+// Does not change gameplay behavior; only exposes references that already exist
+// in this closure so CI can drive/inspect the game headlessly.
+if (typeof window !== 'undefined') {
+  window.__gameTestHooks = {
+    game: game,
+    startGame: startGame,
+    update: update,
+    endGame: endGame,
+    gainXp: gainXp,
+    makeEnemy: makeEnemy,
+    damageEnemy: damageEnemy
+  };
+}
 })();
 </script>
 </body>

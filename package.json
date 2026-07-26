@@ -1,0 +1,12 @@
+{
+  "name": "dem-sinh-ton",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Game sinh ton 2D (auto-battler kieu Vampire Survivors). Ban web dung lap (index.html) la mot ban mirror JS/Canvas viet tay, doc lap voi ban Godot trong godot-project/.",
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.3"
+  }
+}
